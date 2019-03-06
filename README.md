@@ -19,7 +19,7 @@ composer require lamoda/multi-env
 
 ## Usage
 
-### Library usage to work in not multitenant environment (could be useful in development mode)
+### Library usage to work in multiinstance environment (could be useful in development mode)
 
 ```php
 <?php
