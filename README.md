@@ -1,4 +1,10 @@
 # Lamoda multi-env
+
+[![Build Status](https://travis-ci.org/lamoda/multi-env.svg?branch=master)](https://travis-ci.org/lamoda/multi-env)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/lamoda/multi-env/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/lamoda/multi-env/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/lamoda/multi-env/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/lamoda/multi-env/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/lamoda/multi-env/badges/build.png?b=master)](https://scrutinizer-ci.com/g/lamoda/multi-env/build-status/master)
+
 Library that provides classes to work with envs in multitenant environment
 
 Library based on params passed to it on initialization stage will decide which env variable should be used 
