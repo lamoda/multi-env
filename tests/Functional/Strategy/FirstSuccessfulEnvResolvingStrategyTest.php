@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Lamoda\MultiEnvTests\Functional\Strategy;
 
-use Lamoda\MultiEnv\Formatter\PrefixEnvNameFormatter;
+use Lamoda\MultiEnv\Formatter\CharReplaceFormatter;
+use Lamoda\MultiEnv\Formatter\FormatterInterface;
+use Lamoda\MultiEnv\Formatter\FormatterPipeline;
+use Lamoda\MultiEnv\Formatter\PrefixAppendFormatter;
 use Lamoda\MultiEnv\HostDetector\CliArgsBasedHostDetector;
 use Lamoda\MultiEnv\HostDetector\Exception\HostDetectorException;
 use Lamoda\MultiEnv\HostDetector\Factory\GetOptAdapterFactory;
@@ -60,6 +63,11 @@ class FirstSuccessfulEnvResolvingStrategyTest extends TestCase
      */
     public function getEnvDataProvider(): array
     {
+        $formatter = new FormatterPipeline([
+            new PrefixAppendFormatter('-'),
+            new CharReplaceFormatter('-', '_')
+        ]);
+
         return [
             'emptyStrategies' => [
                 'env' => 'DB_HOST',
@@ -88,7 +96,7 @@ class FirstSuccessfulEnvResolvingStrategyTest extends TestCase
                             new ServerHeadersBasedHostDetector('HTTP_X_HOST_ID'),
                             new CliArgsBasedHostDetector('host_id', GetOptAdapterFactory::build()),
                         ]),
-                        new PrefixEnvNameFormatter('-')
+                        $formatter
                     )
                 ],
                 'headers' => [
@@ -115,7 +123,7 @@ class FirstSuccessfulEnvResolvingStrategyTest extends TestCase
                             new ServerHeadersBasedHostDetector('HTTP_X_HOST_ID'),
                             new CliArgsBasedHostDetector('host_id', GetOptAdapterFactory::build())
                         ]),
-                        new PrefixEnvNameFormatter('-')
+                        $formatter
                     )
                 ],
                 'headers' => [
@@ -140,7 +148,7 @@ class FirstSuccessfulEnvResolvingStrategyTest extends TestCase
                             new ServerHeadersBasedHostDetector('HTTP_X_HOST_ID'),
                             new CliArgsBasedHostDetector('host_id', GetOptAdapterFactory::build())
                         ]),
-                        new PrefixEnvNameFormatter('-')
+                        $formatter
                     ),
                     new RawEnvResolvingStrategy(),
                 ],
@@ -167,7 +175,7 @@ class FirstSuccessfulEnvResolvingStrategyTest extends TestCase
                             new ServerHeadersBasedHostDetector('HTTP_X_HOST_ID'),
                             new CliArgsBasedHostDetector('host_id', GetOptAdapterFactory::build())
                         ]),
-                        new PrefixEnvNameFormatter('-')
+                        $formatter
                     ),
                     new RawEnvResolvingStrategy(),
                 ],
@@ -194,7 +202,7 @@ class FirstSuccessfulEnvResolvingStrategyTest extends TestCase
                             new ServerHeadersBasedHostDetector('HTTP_X_HOST_ID'),
                             new CliArgsBasedHostDetector('host_id', GetOptAdapterFactory::build())
                         ]),
-                        new PrefixEnvNameFormatter('-')
+                        $formatter
                     ),
                     new RawEnvResolvingStrategy(),
                 ],

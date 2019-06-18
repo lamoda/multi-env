@@ -8,4 +8,5 @@ build:
 
 filter:
   excluded_paths:
+    - src/FileReader/Exception/*
     - tests/*

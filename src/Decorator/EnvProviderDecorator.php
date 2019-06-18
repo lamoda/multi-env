@@ -10,7 +10,7 @@ use Lamoda\MultiEnv\Strategy\EnvResolvingStrategyInterface;
 final class EnvProviderDecorator
 {
     /**
-     * @var ?EnvResolvingStrategyInterface $resolvingStrategy
+     * @var EnvResolvingStrategyInterface|null $resolvingStrategy
      */
     private static $resolvingStrategy;
 

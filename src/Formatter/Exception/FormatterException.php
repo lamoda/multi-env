@@ -8,8 +8,8 @@ use Lamoda\MultiEnv\Exception\EnvProviderExceptionInterface;
 
 class FormatterException extends \InvalidArgumentException implements EnvProviderExceptionInterface
 {
-    public static function becauseEmptyEnvNamePassed(): self
+    public static function becauseEmptyNamePassed(): self
     {
-        return new self('Env name to format can not be empty');
+        return new self('Name to format can not be empty');
     }
 }

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Lamoda\MultiEnv\Strategy;
 
-use Lamoda\MultiEnv\Formatter\EnvNameFormatterInterface;
 use Lamoda\MultiEnv\Formatter\Exception\FormatterException;
+use Lamoda\MultiEnv\Formatter\FormatterInterface;
 use Lamoda\MultiEnv\HostDetector\HostDetectorInterface;
 
 final class HostBasedEnvResolvingStrategy implements EnvResolvingStrategyInterface
@@ -16,11 +16,11 @@ final class HostBasedEnvResolvingStrategy implements EnvResolvingStrategyInterfa
     private $hostDetector;
 
     /**
-     * @var EnvNameFormatterInterface $envNameFormatter
+     * @var FormatterInterface $envNameFormatter
      */
     private $envNameFormatter;
 
-    public function __construct(HostDetectorInterface $hostDetector, EnvNameFormatterInterface $envNameFormatter)
+    public function __construct(HostDetectorInterface $hostDetector, FormatterInterface $envNameFormatter)
     {
         $this->hostDetector = $hostDetector;
         $this->envNameFormatter = $envNameFormatter;
@@ -34,7 +34,7 @@ final class HostBasedEnvResolvingStrategy implements EnvResolvingStrategyInterfa
     public function getEnv(string $envName): string
     {
         $hostId = $this->hostDetector->getCurrentHost();
-        $envName = $this->envNameFormatter->formatEnvName($envName, $hostId);
+        $envName = $this->envNameFormatter->formatName($envName, $hostId);
 
         return (string)getenv($envName);
     }
