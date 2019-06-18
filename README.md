@@ -19,7 +19,7 @@ composer require lamoda/multi-env
 
 ## Usage
 
-### Library usage to work in not multitenant environment (could be useful in development mode)
+### Library usage examples to work in not multitenant environment (could be useful in development mode)
 
 ```php
 <?php
@@ -35,12 +35,13 @@ EnvProviderDecorator::init($strategy);
 EnvProviderDecorator::getEnv('TEST_ENV');
 ```
 
-### Library usage to work in multitenant environment
+### Library usage examples to work in multitenant environment
 
 ```php
 <?php
 
 use \Lamoda\MultiEnv\Strategy\HostBasedEnvResolvingStrategy;
+use \Lamoda\MultiEnv\Strategy\FileBasedEnvResolvingStrategy;
 use \Lamoda\MultiEnv\Decorator\EnvProviderDecorator;
 
 /*
@@ -51,9 +52,56 @@ $strategy = new HostBasedEnvResolvingStrategy($hostDetector, $envFormatter);
 EnvProviderDecorator::init($strategy);
 
 /*
- * Will search env with some specific prefix/postfix resolved by HostDetectorInterface
+ * Will search env with some specific prefix/suffix resolved by HostDetectorInterface
  * For example host_id__TEST_ENV
  */
+EnvProviderDecorator::getEnv('TEST_ENV');
+
+/*
+ * Pass as first param one of available HostDetectorInterface implementations which detect HostId for current request
+ * Pass as second param one of available EnvFileReaderInterface (for now available only DotEnvFileReaderAdapter) which load specific env file
+ * Pass as third param another EnvResolvingStrategy which find specific env variable from loaded envs
+ */
+$strategy = new FileBasedEnvResolvingStrategy($hostDetector, $envFileReader, $envResolvingStrategy);
+EnvProviderDecorator::init($strategy);
+EnvProviderDecorator::getEnv('TEST_ENV');
+```
+
+### Library set up by build in factory
+
+1. Library set up for work with env in file stored in different directories
+```php
+<?php
+
+use \Lamoda\MultiEnv\Builder\FileBasedEnvResolvingStrategyBuilder;
+use \Lamoda\MultiEnv\Decorator\EnvProviderDecorator;
+
+/*
+ * Result strategy resolve hostId from server headers or cli args
+ * Then load all envs from .env file stored by path /var/envs/*hostId*
+ * Read TEST_ENV env variable    
+ */
+$strategy = FileBasedEnvResolvingStrategyBuilder::buildStrategy('HTTP_X_HOST_ID', 'host_id', '.env', '/var/envs');
+EnvProviderDecorator::init($strategy);
+
+EnvProviderDecorator::getEnv('TEST_ENV');
+```
+2. Library set up for work with env with prefixes
+```php
+<?php
+
+use \Lamoda\MultiEnv\Builder\HostBasedEnvResolvingStrategyBuilder;
+use \Lamoda\MultiEnv\Decorator\EnvProviderDecorator;
+
+/*
+ * Result strategy resolve hostId from server headers or cli args
+ * Add prefix to original env name. Result be like *hostId*___TEST_ENV
+ * Replace all '-' char to '_' case '-' illegal in env variable name
+ * Read *host_id*___TEST_ENV env variable
+ */
+$strategy = HostBasedEnvResolvingStrategyBuilder::buildStrategy('HTTP_X_HOST_ID', 'host_id', '___');
+EnvProviderDecorator::init($strategy);
+
 EnvProviderDecorator::getEnv('TEST_ENV');
 ```
 
@@ -67,7 +115,7 @@ use \Lamoda\MultiEnv\Strategy\HostBasedEnvResolvingStrategy;
 use \Lamoda\MultiEnv\HostDetector\FirstSuccessfulHostDetector;
 use \Lamoda\MultiEnv\HostDetector\CliArgsBasedHostDetector;
 use \Lamoda\MultiEnv\HostDetector\ServerHeadersBasedHostDetector;
-use \Lamoda\MultiEnv\Formatter\PrefixEnvNameFormatter;
+use \Lamoda\MultiEnv\Formatter\PrefixAppendFormatter;
 use \Lamoda\MultiEnv\HostDetector\Factory\GetOptAdapterFactory;
 use \Lamoda\MultiEnv\Decorator\EnvProviderDecorator;
 
@@ -77,7 +125,7 @@ $hostBasedEnvResolvingStrategy = new HostBasedEnvResolvingStrategy(
         new ServerHeadersBasedHostDetector('HTTP_X_TEST_HEADER'),
         new CliArgsBasedHostDetector('host_id', GetOptAdapterFactory::build())    
     ]),
-    new PrefixEnvNameFormatter('___')
+    new PrefixAppendFormatter('___')
 );
 
 $firstSuccessfulStrategy = new FirstSuccessfulEnvResolvingStrategy([
@@ -88,7 +136,7 @@ EnvProviderDecorator::init($firstSuccessfulStrategy);
 
 /*
  * Try find original env 'TEST_ENV' first. 
- * If original env not found than try to find env with some specific prefix/postfix resolved by HostDetectorInterface.
+ * If original env not found than try to find env with some specific prefix/suffix resolved by HostDetectorInterface.
  * For example host_id__TEST_ENV
  */
 EnvProviderDecorator::getEnv('TEST_ENV');
@@ -143,17 +191,66 @@ EnvProviderDecorator::getEnv('TEST_ENV');
     $hostId = $firstSuccessfulHostDetector->getCurrentHost();
     ```
     
-## Available EnvNameFormatterInterface implementations
-1. __\Lamoda\MultiEnv\Formatter\PrefixEnvNameFormatter__ - format env name. Combine __original env name__, __delimiter__,
-__host id__ in order \*__host id__\*, \*__delimiter__\*, \*__original env name__\*
+## Available FormatterInterface implementations
+1. __\Lamoda\MultiEnv\Formatter\PrefixAppendFormatter__ - append prefix and delimiter to original string. 
+Combine __original string__, __delimiter__,__host id__ in order 
+\*__host id__\*, \*__delimiter__\*, \*__original string__\*
     ```php
     <?php 
  
-    use \Lamoda\MultiEnv\Formatter\PrefixEnvNameFormatter;
+    use \Lamoda\MultiEnv\Formatter\PrefixAppendFormatter;
     use \Lamoda\MultiEnv\Model\HostId;
     use \Lamoda\MultiEnv\Formatter\Exception\FormatterException;
  
-    $formatter = new PrefixEnvNameFormatter('__');
-    // Throw FormatterException if passed empty originalEnvName
-    $formatterName = $formatter->formatEnvName('originalEnvName', new HostId('test_host'));
+    $formatter = new PrefixAppendFormatter('__');
+    // Throw FormatterException if passed empty originalName
+    $formatterName = $formatter->formatName('originalEnvName', new HostId('test_host'));
+    ```
+2. __\Lamoda\MultiEnv\Formatter\SuffixAppendFormatter__ - append suffix and delimiter to original string.
+Combine __original string__, __delimiter__,__host id__ in order
+\*__original string__\*, \*__delimiter__\*, \*__host id__\*
+    ```php
+    <?php
+    
+    use \Lamoda\MultiEnv\Formatter\SuffixAppendFormatter;
+    use \Lamoda\MultiEnv\Model\HostId;
+    use \Lamoda\MultiEnv\Formatter\Exception\FormatterException;
+ 
+    $formatter = new SuffixAppendFormatter('___');
+    // Throw FormatterException if passed empty originalName
+    $formattedName = $formatter->formatName('originalEnvName', new HostId('test_host'));
+    ```
+3. __\Lamoda\MultiEnv\Formatter\CharReplaceFormatter__ - act like __str_replace__ in PHP. Could be useful to replace illegal
+char __'-'__ to __'\_\'__ when you access to env variable
+    ```php
+    <?php
+    
+    use \Lamoda\MultiEnv\Formatter\CharReplaceFormatter;
+    use \Lamoda\MultiEnv\Model\HostId;
+    use \Lamoda\MultiEnv\Formatter\Exception\FormatterException;
+ 
+    $formatter = new CharReplaceFormatter('-', '_');
+    /*
+     * Throw FormatterException if passed empty originalName
+     * return 'original_env_name'     
+     */
+    $formattedName = $formatter->formatName('original-env-name', new HostId('testHost'));
+    ```
+
+4. __\Lamoda\MultiEnv\Formatter\FormatterPipeline__ - aggregate few formatters. Iterate through them and apply each to original stirng
+    ```php
+    <?php 
+    
+    use \Lamoda\MultiEnv\Formatter\FormatterPipeline;
+    use \Lamoda\MultiEnv\Formatter\SuffixAppendFormatter;
+    use \Lamoda\MultiEnv\Formatter\CharReplaceFormatter;
+    use \Lamoda\MultiEnv\Model\HostId;
+    
+    $formatter = new FormatterPipeline([
+       new SuffixAppendFormatter('-'),
+       new CharReplaceFormatter('-', '_')
+    ]);
+ 
+    // return 'originalEnvName_test_host_id'
+    $formattedName = $formatter->formatName('originalEnvName', new HostId('test-host-id'));
     ```

@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Lamoda\MultiEnvTests\Functional\Strategy;
 
-use Lamoda\MultiEnv\Formatter\EnvNameFormatterInterface;
+use Lamoda\MultiEnv\Formatter\CharReplaceFormatter;
 use Lamoda\MultiEnv\Formatter\Exception\FormatterException;
-use Lamoda\MultiEnv\Formatter\PrefixEnvNameFormatter;
+use Lamoda\MultiEnv\Formatter\FormatterInterface;
+use Lamoda\MultiEnv\Formatter\FormatterPipeline;
+use Lamoda\MultiEnv\Formatter\PrefixAppendFormatter;
 use Lamoda\MultiEnv\HostDetector\CliArgsBasedHostDetector;
 use Lamoda\MultiEnv\HostDetector\Exception\HostDetectorException;
 use Lamoda\MultiEnv\HostDetector\Factory\GetOptAdapterFactory;
@@ -34,7 +36,7 @@ class HostBasedEnvResolvingStrategyTest extends TestCase
     /**
      * @param string $env
      * @param HostDetectorInterface $hostDetector
-     * @param EnvNameFormatterInterface $nameFormatter
+     * @param FormatterInterface $nameFormatter
      * @param array $testHeaders
      * @param array $testCliArgs
      * @param array $testEnvs
@@ -44,7 +46,7 @@ class HostBasedEnvResolvingStrategyTest extends TestCase
     public function testGetEnv(
         string $env,
         HostDetectorInterface $hostDetector,
-        EnvNameFormatterInterface $nameFormatter,
+        FormatterInterface $nameFormatter,
         array $testHeaders,
         array $testCliArgs,
         array $testEnvs,
@@ -63,7 +65,10 @@ class HostBasedEnvResolvingStrategyTest extends TestCase
      */
     public function getEnvDataProvider(): array
     {
-        $nameFormatter = new PrefixEnvNameFormatter('-');
+        $nameFormatter = new FormatterPipeline([
+            new PrefixAppendFormatter('-'),
+            new CharReplaceFormatter('-', '_')
+        ]);
         $headerBasedDetector = new ServerHeadersBasedHostDetector('HTTP_X_HOST_ID');
 
         return [
@@ -274,14 +279,14 @@ class HostBasedEnvResolvingStrategyTest extends TestCase
     /**
      * @param string $env
      * @param HostDetectorInterface $hostDetector
-     * @param EnvNameFormatterInterface $nameFormatter
+     * @param FormatterInterface $nameFormatter
      * @param \Exception $expected
      * @dataProvider exceptionRaisedWhenGetEnvMethodCalled
      */
     public function testExceptionRaisedWhenGetEnvMethodCalled(
         string $env,
         HostDetectorInterface $hostDetector,
-        EnvNameFormatterInterface $nameFormatter,
+        FormatterInterface $nameFormatter,
         \Exception $expected
     ): void {
         $this->expectException(get_class($expected));
@@ -296,8 +301,8 @@ class HostBasedEnvResolvingStrategyTest extends TestCase
             'emptyAll' => [
                 'env' => '',
                 'hostDetector' => new FirstSuccessfulHostDetector(),
-                'nameFormatter' => new PrefixEnvNameFormatter('-'),
-                'expected' => FormatterException::becauseEmptyEnvNamePassed()
+                'nameFormatter' => new PrefixAppendFormatter('-'),
+                'expected' => FormatterException::becauseEmptyNamePassed()
             ],
         ];
     }
