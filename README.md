@@ -59,7 +59,7 @@ EnvProviderDecorator::getEnv('TEST_ENV');
 
 /*
  * Pass as first param one of available HostDetectorInterface implementations which detect HostId for current request
- * Pass as second param one of available EnvFileReaderInterface (for now available only DotEnvFileReaderAdapter) which load specific env file
+ * Pass as second param one of available EnvFileReaderInterface (for now available only DotEnvV2FileReaderAdapter) which load specific env file
  * Pass as third param another EnvResolvingStrategy which find specific env variable from loaded envs
  */
 $strategy = new FileBasedEnvResolvingStrategy($hostDetector, $envFileReader, $envResolvingStrategy);
