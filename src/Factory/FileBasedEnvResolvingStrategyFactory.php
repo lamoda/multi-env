@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Lamoda\MultiEnv\Factory;
 
-use Lamoda\MultiEnv\FileReader\DotEnvFileReaderAdapter;
+use Lamoda\MultiEnv\FileReader\DotEnvV2FileReaderAdapter;
 use Lamoda\MultiEnv\FileReader\FileNameResolver\FileNameResolver;
 use Lamoda\MultiEnv\FileReader\PathResolver\PathResolver;
 use Lamoda\MultiEnv\Formatter\SuffixAppendFormatter;
@@ -28,7 +28,7 @@ class FileBasedEnvResolvingStrategyFactory
                 new ServerHeadersBasedHostDetector($serverHeaderToSearch),
                 new CliArgsBasedHostDetector($cliArgToSearch, GetOptAdapterFactory::build())
             ]),
-            new DotEnvFileReaderAdapter(
+            new DotEnvV2FileReaderAdapter(
                 new PathResolver($basePathToEnvFile, new SuffixAppendFormatter(DIRECTORY_SEPARATOR)),
                 new FileNameResolver($envFileName)
             ),

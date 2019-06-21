@@ -9,7 +9,7 @@ use Lamoda\MultiEnv\FileReader\FileNameResolver\FileNameResolverInterface;
 use Lamoda\MultiEnv\FileReader\PathResolver\PathResolverInterface;
 use Lamoda\MultiEnv\Model\HostId;
 
-final class DotEnvFileReaderAdapter implements EnvFileReaderInterface
+final class DotEnvV2FileReaderAdapter implements EnvFileReaderInterface
 {
     /**
      * @var PathResolverInterface
@@ -45,7 +45,7 @@ final class DotEnvFileReaderAdapter implements EnvFileReaderInterface
         }
 
         try {
-            $dotEnv = \Dotenv\Dotenv::create(
+            $dotEnv = new \Dotenv\Dotenv(
                 $this->pathResolver->resolvePathToEnvFile($hostId),
                 $this->fileNameResolver->resolveEnvFileName($hostId)
             );

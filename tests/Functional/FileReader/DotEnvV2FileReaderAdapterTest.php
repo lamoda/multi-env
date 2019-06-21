@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Lamoda\MultiEnvTests\Functional\FileReader;
 
-use Lamoda\MultiEnv\FileReader\DotEnvFileReaderAdapter;
+use Lamoda\MultiEnv\FileReader\DotEnvV2FileReaderAdapter;
 use Lamoda\MultiEnv\FileReader\Exception\EnvFileReaderException;
 use Lamoda\MultiEnv\FileReader\FileNameResolver\FileNameResolver;
 use Lamoda\MultiEnv\FileReader\PathResolver\PathResolver;
@@ -16,7 +16,7 @@ use Lamoda\MultiEnv\Model\HostId;
 use Lamoda\MultiEnvTests\Support\TestEnvFileManager;
 use PHPUnit\Framework\TestCase;
 
-class DotEnvFileReaderAdapterTest extends TestCase
+class DotEnvV2FileReaderAdapterTest extends TestCase
 {
     use TestEnvFileManager;
 
@@ -48,7 +48,7 @@ class DotEnvFileReaderAdapterTest extends TestCase
     ): void {
         $this->createFileWithEnvs($envsToWrite, $relativePathToFile, $fileName);
 
-        $fileReader = new DotEnvFileReaderAdapter($pathResolver, $fileNameResolver);
+        $fileReader = new DotEnvV2FileReaderAdapter($pathResolver, $fileNameResolver);
         $fileReader->readEnvFile($hostId);
 
         $this->assertEquals($expectedValue, getenv($envToSearch));
@@ -151,7 +151,7 @@ class DotEnvFileReaderAdapterTest extends TestCase
         $this->createFileWithEnvs($startEnv);
 
         $hostId = new HostId('test');
-        $fileReader = new DotEnvFileReaderAdapter(
+        $fileReader = new DotEnvV2FileReaderAdapter(
             new PathResolver($this->getBasePathToDataFolder()),
             new FileNameResolver()
         );
@@ -205,7 +205,7 @@ class DotEnvFileReaderAdapterTest extends TestCase
         $this->expectException(\get_class($expected));
         $this->expectExceptionMessage($expected->getMessage());
 
-        $resolver = new DotEnvFileReaderAdapter($pathResolver, $fileNameResolver);
+        $resolver = new DotEnvV2FileReaderAdapter($pathResolver, $fileNameResolver);
         $resolver->readEnvFile($hostId);
     }
 
