@@ -10,10 +10,10 @@
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^2.14",
     "phpunit/phpunit": "^7.5",
-    "vlucas/phpdotenv": "^3.4"
+    "vlucas/phpdotenv": "^2.4"
   },
   "suggest": {
-    "vlucas/phpdotenv": "Required for DotEnvFileReaderAdapter"
+    "vlucas/phpdotenv": "Required for DotEnvV2FileReaderAdapter."
   },
   "autoload": {
     "psr-4": {

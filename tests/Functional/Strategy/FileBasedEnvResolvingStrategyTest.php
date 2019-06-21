@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Lamoda\MultiEnvTests\Functional\Strategy;
 
-use Lamoda\MultiEnv\FileReader\DotEnvFileReaderAdapter;
+use Lamoda\MultiEnv\FileReader\DotEnvV2FileReaderAdapter;
 use Lamoda\MultiEnv\FileReader\EnvFileReaderInterface;
 use Lamoda\MultiEnv\FileReader\FileNameResolver\FileNameResolver;
 use Lamoda\MultiEnv\FileReader\PathResolver\PathResolver;
@@ -88,7 +88,7 @@ final class FileBasedEnvResolvingStrategyTest extends TestCase
                     ]
                 ],
                 'hostDetector' => new ServerHeadersBasedHostDetector('HTTP_X_HOST_ID'),
-                'fileReader' => new DotEnvFileReaderAdapter(
+                'fileReader' => new DotEnvV2FileReaderAdapter(
                     new PathResolver($this->getBasePathToDataFolder()),
                     new FileNameResolver()
                 ),
@@ -114,7 +114,7 @@ final class FileBasedEnvResolvingStrategyTest extends TestCase
                     ],
                 ],
                 'hostDetector' => new ServerHeadersBasedHostDetector('HTTP_X_HOST_ID'),
-                'fileReader' => new DotEnvFileReaderAdapter(
+                'fileReader' => new DotEnvV2FileReaderAdapter(
                     new PathResolver($this->getBasePathToDataFolder(), new SuffixAppendFormatter(DIRECTORY_SEPARATOR)),
                     new FileNameResolver()
                 ),
@@ -141,7 +141,7 @@ final class FileBasedEnvResolvingStrategyTest extends TestCase
                     ],
                 ],
                 'hostDetector' => new CliArgsBasedHostDetector('host_id', GetOptAdapterFactory::build()),
-                'fileReader' => new DotEnvFileReaderAdapter(
+                'fileReader' => new DotEnvV2FileReaderAdapter(
                     new PathResolver($this->getBasePathToDataFolder(), new SuffixAppendFormatter(DIRECTORY_SEPARATOR)),
                     new FileNameResolver()
                 ),
@@ -166,7 +166,7 @@ final class FileBasedEnvResolvingStrategyTest extends TestCase
                     ],
                 ],
                 'hostDetector' => new ServerHeadersBasedHostDetector('HTTP_X_HOST_ID'),
-                'fileReader' => new DotEnvFileReaderAdapter(
+                'fileReader' => new DotEnvV2FileReaderAdapter(
                     new PathResolver($this->getBasePathToDataFolder()),
                     new FileNameResolver('.env', new PrefixAppendFormatter('_'))
                 ),
@@ -189,7 +189,7 @@ final class FileBasedEnvResolvingStrategyTest extends TestCase
                     ]
                 ],
                 'hostDetector' => new CliArgsBasedHostDetector('host_id', GetOptAdapterFactory::build()),
-                'fileReader' => new DotEnvFileReaderAdapter(
+                'fileReader' => new DotEnvV2FileReaderAdapter(
                     new PathResolver($this->getBasePathToDataFolder()),
                     new FileNameResolver('env', new PrefixAppendFormatter('.'))
                 ),
@@ -211,7 +211,7 @@ final class FileBasedEnvResolvingStrategyTest extends TestCase
                     ]
                 ],
                 'hostDetector' => new ServerHeadersBasedHostDetector('HTTP_X_HOST_ID'),
-                'fileReader' => new DotEnvFileReaderAdapter(
+                'fileReader' => new DotEnvV2FileReaderAdapter(
                     new PathResolver($this->getBasePathToDataFolder()),
                     new FileNameResolver('.env')
                 ),
