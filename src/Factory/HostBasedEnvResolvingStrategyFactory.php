@@ -13,6 +13,9 @@ use Lamoda\MultiEnv\HostDetector\FirstSuccessfulHostDetector;
 use Lamoda\MultiEnv\HostDetector\ServerHeadersBasedHostDetector;
 use Lamoda\MultiEnv\Strategy\HostBasedEnvResolvingStrategy;
 
+/**
+ * @deprecated This factory must be implemented in the client code. It will be removed in version 1.0
+ */
 class HostBasedEnvResolvingStrategyFactory
 {
     public static function createStrategy(
@@ -20,6 +23,11 @@ class HostBasedEnvResolvingStrategyFactory
         string $cliArgToSearch,
         string $delimiter
     ): HostBasedEnvResolvingStrategy {
+        @trigger_error(
+            sprintf('Factory %s is deprecated. It must be implemented in the client code. It will be removed in version 1.0', self::class),
+            E_USER_DEPRECATED
+        );
+
         return new HostBasedEnvResolvingStrategy(
             new FirstSuccessfulHostDetector([
                 new ServerHeadersBasedHostDetector($serverHeaderToSearch),
