@@ -11,10 +11,8 @@ use PHPUnit\Framework\TestCase;
 class RawEnvResolvingStrategyTest extends TestCase
 {
     use TestEnvManager;
-    /**
-     * @var RawEnvResolvingStrategy $strategy
-     */
-    private $strategy;
+
+    private RawEnvResolvingStrategy $strategy;
 
     protected function setUp(): void
     {
@@ -29,9 +27,6 @@ class RawEnvResolvingStrategyTest extends TestCase
     }
 
     /**
-     * @param string $envToSearch
-     * @param string $expected
-     * @param array $testEnv
      * @dataProvider getEnvDataProvider
      */
     public function testGetEnv(string $envToSearch, string $expected, array $testEnv): void
@@ -46,15 +41,15 @@ class RawEnvResolvingStrategyTest extends TestCase
             'emptyAll' => [
                 'envToSearch' => '',
                 'expected' => '',
-                'testEnvs' => []
+                'testEnvs' => [],
             ],
             'emptyEnvToSearch' => [
                 'envToSearch' => '',
                 'expected' => '',
                 'testEnvs' => [
                     'PHP_TEST_ENV' => 'test-value',
-                    'PHP_ANOTHER_TEST_ENV' => 'test-value1'
-                ]
+                    'PHP_ANOTHER_TEST_ENV' => 'test-value1',
+                ],
             ],
             'envToSearchContainsOnlySystemSymbols' => [
                 'envToSearch' => "\t\r\n\0\x0B    ",
@@ -62,49 +57,49 @@ class RawEnvResolvingStrategyTest extends TestCase
                 'testEnvs' => [
                     'PHP_TEST' => 'test',
                     'PHP_SOME_ENV' => 'test1',
-                    'PHP_DB_HOST' => 'test2'
-                ]
+                    'PHP_DB_HOST' => 'test2',
+                ],
             ],
             'envNotContainsInEnvList' => [
                 'envToSearch' => 'PHP_UNIQ_ENV',
                 'expected' => '',
                 'testEnvs' => [
                     'PHP_TEST' => 'test',
-                    'PHP_TEST1' => 'test1'
-                ]
+                    'PHP_TEST1' => 'test1',
+                ],
             ],
             'envContains' => [
                 'envToSearch' => 'PHP_UNIQ_ENV',
                 'expected' => 'uniq_env_value',
                 'testEnvs' => [
                     'PHP_SOME_ENV_TEST' => 'some,value',
-                    'PHP_UNIQ_ENV' => 'uniq_env_value'
-                ]
+                    'PHP_UNIQ_ENV' => 'uniq_env_value',
+                ],
             ],
             'envContainsButPassedInIncorrectFormat' => [
                 'envToSearch' => 'PHP-UNIQ-ENV   ',
                 'expected' => '',
                 'testEnvs' => [
                     'PHP_ENV' => 'yep,its_env_value',
-                    'PHP_UNIQ_ENV' => 'some-random,value'
-                ]
+                    'PHP_UNIQ_ENV' => 'some-random,value',
+                ],
             ],
             'envToSearchInLowerRegister' => [
                 'envToSearch' => 'php_test_env',
                 'expected' => 'success',
                 'testEnvs' => [
                     'PHP_ENV' => 'some value',
-                    'php_test_env' => 'success'
-                ]
+                    'php_test_env' => 'success',
+                ],
             ],
             'envToSearchInUpperRegister' => [
                 'envToSearch' => 'PHP_TEST_ENV',
                 'expected' => 'success',
                 'testEnvs' => [
                     'PHP_ENV' => 'some value',
-                    'PHP_TEST_ENV' => 'success'
-                ]
-            ]
+                    'PHP_TEST_ENV' => 'success',
+                ],
+            ],
         ];
     }
 }

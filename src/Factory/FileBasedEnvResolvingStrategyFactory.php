@@ -34,7 +34,7 @@ class FileBasedEnvResolvingStrategyFactory
         return new FileBasedEnvResolvingStrategy(
             new FirstSuccessfulHostDetector([
                 new ServerHeadersBasedHostDetector($serverHeaderToSearch),
-                new CliArgsBasedHostDetector($cliArgToSearch, GetOptAdapterFactory::build())
+                new CliArgsBasedHostDetector($cliArgToSearch, GetOptAdapterFactory::build()),
             ]),
             new DotEnvV2FileReaderAdapter(
                 new PathResolver($basePathToEnvFile, new SuffixAppendFormatter(DIRECTORY_SEPARATOR)),

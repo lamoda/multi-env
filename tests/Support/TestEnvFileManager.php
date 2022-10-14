@@ -8,7 +8,7 @@ use RuntimeException;
 
 trait TestEnvFileManager
 {
-    private $basePathToData = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'data/env';
+    private string $basePathToData = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'data/env';
 
     public function createFileWithEnvs(array $envs, string $pathToDir = '', string $fileName = '.env'): void
     {

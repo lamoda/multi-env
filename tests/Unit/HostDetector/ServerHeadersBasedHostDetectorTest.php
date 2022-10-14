@@ -21,7 +21,6 @@ class ServerHeadersBasedHostDetectorTest extends TestCase
     }
 
     /**
-     * @param string $needle
      * @dataProvider successCreationDataProvider
      */
     public function testSuccessfulCreation(string $needle): void
@@ -41,14 +40,13 @@ class ServerHeadersBasedHostDetectorTest extends TestCase
             ],
             'needleWithWithSystemSymbols' => [
                 'needle' => "    \t\n\r\0\x0B   test-test-test   \t\n\r\0\x0B   ",
-            ]
+            ],
         ];
     }
 
     /**
-     * @param string $needle
-     * @param \Exception $expectedException
      * @dataProvider exceptionRaisedWhenConstructCalledWithWrongNeedle
+     *
      * @throws HostDetectorException
      */
     public function testExceptionRaisedWhenConstructCalledWithWrongNeedle(
@@ -67,24 +65,22 @@ class ServerHeadersBasedHostDetectorTest extends TestCase
         return [
             'emptyNeedle' => [
                 'needle' => '',
-                'expectedException' => $expectedException
+                'expectedException' => $expectedException,
             ],
             'onlySpacesInNeedle' => [
                 'needle' => '       ',
-                'expectedException' => $expectedException
+                'expectedException' => $expectedException,
             ],
             'differentCharacters' => [
                 'needle' => "\t\n\r\0\x0B",
-                'expectedException' => $expectedException
-            ]
+                'expectedException' => $expectedException,
+            ],
         ];
     }
 
     /**
-     * @param string $needle
-     * @param array $headers
-     * @param HostId $expectedHost
      * @throws HostDetectorException
+     *
      * @dataProvider getCurrentHostDataProvider
      */
     public function testGetCurrentHost(string $needle, array $headers, HostId $expectedHost): void
@@ -92,7 +88,7 @@ class ServerHeadersBasedHostDetectorTest extends TestCase
         $detector = new ServerHeadersBasedHostDetector($needle);
         $this->addTestHeaders($headers);
         $currentHost = $detector->getCurrentHost();
-        $this->assertEquals((string)$expectedHost, (string)$currentHost);
+        $this->assertEquals((string) $expectedHost, (string) $currentHost);
     }
 
     public function getCurrentHostDataProvider(): array
@@ -103,26 +99,26 @@ class ServerHeadersBasedHostDetectorTest extends TestCase
                 'headers' => [
                     'HTTP_HOST' => 'localhost',
                     'HTTP_X_TEST_HEADER' => 'some-value',
-                    'HTTP_X_HOST_ID' => 'test'
+                    'HTTP_X_HOST_ID' => 'test',
                 ],
-                'expectedHost' => new HostId('test')
+                'expectedHost' => new HostId('test'),
             ],
             'needleExistAnotherSet' => [
                 'needle' => 'X_TEST',
                 'headers' => [
                     'HTTP_HOST' => 'test_host',
-                    'X_TEST' => 'x_test'
+                    'X_TEST' => 'x_test',
                 ],
-                'expectedHost' => new HostId('x_test')
+                'expectedHost' => new HostId('x_test'),
             ],
             'needleNotExist' => [
                 'needle' => 'TEST',
                 'headers' => [
                     'HTTP_HOST' => 'localhost',
                     'HTTP_X_TEST_HEADER' => 'x-test',
-                    'HTTP_X_ANOTHER_TEST_HEADER' => 'x-another-test'
+                    'HTTP_X_ANOTHER_TEST_HEADER' => 'x-another-test',
                 ],
-                'expectedHost' => new HostId('')
+                'expectedHost' => new HostId(''),
             ],
             'needleInDifferentRegister' => [
                 'needle' => 'http_x_host_id',
@@ -131,22 +127,22 @@ class ServerHeadersBasedHostDetectorTest extends TestCase
                     'HTTP_X_TEST' => 'some-value',
                     'HTTP_X_HOST_ID' => 'test1',
                 ],
-                'expectedHost' => new HostId('')
+                'expectedHost' => new HostId(''),
             ],
             'needleNotMath' => [
                 'needle' => 'HTTP-X-TEST',
                 'headers' => [
                     'HTTP_HOST' => 'localhost',
                     'HTTP_X_TEST' => 'some_test_value',
-                    'HTTP_X_HOST_ID' => 'host_id'
+                    'HTTP_X_HOST_ID' => 'host_id',
                 ],
-                'expectedHost' => new HostId('')
+                'expectedHost' => new HostId(''),
             ],
             'emptyHeaders' => [
                 'needle' => 'HTTP_X_TEST',
                 'headers' => [],
-                'expectedHost' => new HostId('')
-            ]
+                'expectedHost' => new HostId(''),
+            ],
         ];
     }
 }

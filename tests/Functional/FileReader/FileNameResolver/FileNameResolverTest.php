@@ -16,10 +16,6 @@ use PHPUnit\Framework\TestCase;
 class FileNameResolverTest extends TestCase
 {
     /**
-     * @param string $originalFileName
-     * @param FormatterInterface|null $formatter
-     * @param HostId $hostId
-     * @param string $expected
      * @dataProvider fileNameResolveDataProvider
      */
     public function testFileNameResolve(
@@ -39,70 +35,70 @@ class FileNameResolverTest extends TestCase
                 'originalName' => '',
                 'formatter' => null,
                 'hostId' => new HostId(''),
-                'expected' => '.env'
+                'expected' => '.env',
             ],
             'notEmptyOriginalName' => [
                 'originalName' => '.some_not_default_file_name.env',
                 'formatter' => null,
                 'hostId' => new HostId(''),
-                'expected' => '.some_not_default_file_name.env'
+                'expected' => '.some_not_default_file_name.env',
             ],
             'notEmptyOriginalNameWithoutDot' => [
                 'originalName' => 'another_file_name.env',
                 'formatter' => null,
                 'hostId' => new HostId(''),
-                'expected' => 'another_file_name.env'
+                'expected' => 'another_file_name.env',
             ],
             'emptyFormatterOnly' => [
                 'originalName' => '.test_file',
                 'formatter' => null,
                 'hostId' => new HostId('test_host'),
-                'expected' => '.test_file'
+                'expected' => '.test_file',
             ],
             'prefixFormatter' => [
                 'originalName' => '.env',
                 'formatter' => new PrefixAppendFormatter('.'),
                 'hostId' => new HostId('test_host'),
-                'expected' => '.test_host.env'
+                'expected' => '.test_host.env',
             ],
             'prefixFormatterWithoutDot' => [
                 'originalName' => 'some-name',
                 'formatter' => new PrefixAppendFormatter('-'),
                 'hostId' => new HostId('some-host'),
-                'expected' => 'some-host-some-name'
+                'expected' => 'some-host-some-name',
             ],
             'prefixFormatterWithoutDotAndDelimiter' => [
                 'originalName' => 'env',
                 'formatter' => new PrefixAppendFormatter(''),
                 'hostId' => new HostId('test'),
-                'expected' => 'testenv'
+                'expected' => 'testenv',
             ],
             'suffixFormatter' => [
                 'originalName' => '.env',
                 'formatter' => new SuffixAppendFormatter('-'),
                 'hostId' => new HostId('test_name'),
-                'expected' => '.env-test_name'
+                'expected' => '.env-test_name',
             ],
             'suffixFormatterWithoutDot' => [
                 'originalName' => 'test-env-file',
                 'formatter' => new SuffixAppendFormatter('_'),
                 'hostId' => new HostId('some_host'),
-                'expected' => 'test-env-file_some_host'
+                'expected' => 'test-env-file_some_host',
             ],
             'suffixFormatterWithoutDotAndDelimiter' => [
                 'originalName' => 'env',
                 'formatter' => new SuffixAppendFormatter(''),
                 'hostId' => new HostId('env'),
-                'expected' => 'envenv'
+                'expected' => 'envenv',
             ],
             'formatterPipeline' => [
                 'originalName' => 'test-file',
                 'formatter' => new FormatterPipeline([
                     new SuffixAppendFormatter('-'),
-                    new CharReplaceFormatter('-', '_')
+                    new CharReplaceFormatter('-', '_'),
                 ]),
                 'hostId' => new HostId('env'),
-                'expected' => 'test_file_env'
+                'expected' => 'test_file_env',
             ],
             'anotherFormatterPipeline' => [
                 'originalName' => '.env',
@@ -110,11 +106,11 @@ class FileNameResolverTest extends TestCase
                     new SuffixAppendFormatter('-'),
                     new PrefixAppendFormatter('||'),
                     new CharReplaceFormatter('|', '_'),
-                    new CharReplaceFormatter('-', '_')
+                    new CharReplaceFormatter('-', '_'),
                 ]),
                 'hostId' => new HostId('test'),
-                'expected' => '.test__env_test'
-            ]
+                'expected' => '.test__env_test',
+            ],
         ];
     }
 }

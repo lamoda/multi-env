@@ -9,10 +9,7 @@ use Lamoda\MultiEnv\Strategy\EnvResolvingStrategyInterface;
 
 final class EnvProviderDecorator
 {
-    /**
-     * @var EnvResolvingStrategyInterface|null $resolvingStrategy
-     */
-    private static $resolvingStrategy;
+    private static ?EnvResolvingStrategyInterface $resolvingStrategy;
 
     public static function init(EnvResolvingStrategyInterface $resolvingStrategy): void
     {
@@ -25,9 +22,7 @@ final class EnvProviderDecorator
     }
 
     /**
-     * @param string $envName
      * @throws EnvProviderDecoratorException
-     * @return string
      */
     public static function getEnv(string $envName): string
     {

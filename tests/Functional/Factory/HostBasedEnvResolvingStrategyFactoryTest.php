@@ -12,7 +12,9 @@ use PHPUnit\Framework\TestCase;
 
 class HostBasedEnvResolvingStrategyFactoryTest extends TestCase
 {
-    use TestHeadersManager, TestCliArgsManager, TestEnvManager;
+    use TestHeadersManager;
+    use TestCliArgsManager;
+    use TestEnvManager;
 
     protected function tearDown(): void
     {
@@ -22,12 +24,6 @@ class HostBasedEnvResolvingStrategyFactoryTest extends TestCase
     }
 
     /**
-     * @param string $envToSearch
-     * @param string $expected
-     * @param array $testHeaders
-     * @param array $testCliArgs
-     * @param array $testEnvs
-     * @param array $builderConfig
      * @dataProvider createStrategyDataProvider
      */
     public function testCreateStrategy(
@@ -58,48 +54,48 @@ class HostBasedEnvResolvingStrategyFactoryTest extends TestCase
                 'expected' => 'correct',
                 'headers' => [
                     'HTTP_X_HOST_ID' => 'test_id',
-                    'HOST_ID' => 'moscow'
+                    'HOST_ID' => 'moscow',
                 ],
                 'cliArgs' => [
                     'host_id' => [
-                        'value' => 'wrong_id'
-                    ]
+                        'value' => 'wrong_id',
+                    ],
                 ],
                 'envs' => [
                     'DB_HOST' => 'wrong',
                     'test_id___DB_HOST' => 'correct',
-                    'wrong_id___DB_HOST' => 'wrong'
+                    'wrong_id___DB_HOST' => 'wrong',
                 ],
                 'builderConfig' => [
                     'header' => 'HTTP_X_HOST_ID',
                     'cliArg' => 'host_id',
-                    'delimiter' => '___'
-                ]
+                    'delimiter' => '___',
+                ],
             ],
             'foundByCli' => [
                 'envToSearch' => 'DB_HOST',
                 'expected' => 'correct',
                 'headers' => [
                     'TEST_ID' => 'test_id',
-                    'HOST_ID' => 'moscow'
+                    'HOST_ID' => 'moscow',
                 ],
                 'cliArgs' => [
                     'host_id' => [
-                        'value' => 'correct_id'
-                    ]
+                        'value' => 'correct_id',
+                    ],
                 ],
                 'envs' => [
                     'DB_HOST' => 'wrong',
                     'test_id___DB_HOST' => 'wrong',
                     'wrong_id___DB_HOST' => 'wrong',
-                    'correct_id___DB_HOST' => 'correct'
+                    'correct_id___DB_HOST' => 'correct',
                 ],
                 'builderConfig' => [
                     'header' => 'HTTP_X_HOST_ID',
                     'cliArg' => 'host_id',
-                    'delimiter' => '___'
-                ]
-            ]
+                    'delimiter' => '___',
+                ],
+            ],
         ];
     }
 }

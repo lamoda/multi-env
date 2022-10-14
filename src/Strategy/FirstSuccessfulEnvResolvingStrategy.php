@@ -7,9 +7,9 @@ namespace Lamoda\MultiEnv\Strategy;
 final class FirstSuccessfulEnvResolvingStrategy implements EnvResolvingStrategyInterface
 {
     /**
-     * @var array|EnvResolvingStrategyInterface[] $strategies
+     * @var array|EnvResolvingStrategyInterface[]
      */
-    private $strategies = [];
+    private array $strategies = [];
 
     public function __construct(array $strategies = [])
     {

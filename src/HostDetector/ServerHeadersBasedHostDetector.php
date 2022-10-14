@@ -9,13 +9,9 @@ use Lamoda\MultiEnv\Model\HostId;
 
 final class ServerHeadersBasedHostDetector implements HostDetectorInterface
 {
-    /**
-     * @var string $needle
-     */
-    private $needle;
+    private string $needle;
 
     /**
-     * @param string $needle
      * @throws HostDetectorException
      */
     public function __construct(string $needle)
@@ -31,7 +27,7 @@ final class ServerHeadersBasedHostDetector implements HostDetectorInterface
 
     public function getCurrentHost(): HostId
     {
-        $hostId = (string)($_SERVER[$this->needle] ?? '');
+        $hostId = (string) ($_SERVER[$this->needle] ?? '');
 
         return new HostId($hostId);
     }

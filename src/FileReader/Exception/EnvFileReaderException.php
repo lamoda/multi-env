@@ -14,7 +14,7 @@ final class EnvFileReaderException extends \RuntimeException implements EnvProvi
         return new self('Can\'t process file with env', 0, $previous);
     }
 
-    public static function becauseAdapterCanNotBeCreated(string $adapterName, string $required)
+    public static function becauseAdapterCanNotBeCreated(string $adapterName, string $required): self
     {
         return new self('Can\t create adapter "' . $adapterName . '". It\'s require "' . $required . '"');
     }

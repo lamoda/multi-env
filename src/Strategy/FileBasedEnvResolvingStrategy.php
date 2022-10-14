@@ -9,20 +9,11 @@ use Lamoda\MultiEnv\HostDetector\HostDetectorInterface;
 
 final class FileBasedEnvResolvingStrategy implements EnvResolvingStrategyInterface
 {
-    /**
-     * @var HostDetectorInterface
-     */
-    private $hostDetector;
+    private HostDetectorInterface $hostDetector;
 
-    /**
-     * @var EnvFileReaderInterface
-     */
-    private $envFileReader;
+    private EnvFileReaderInterface $envFileReader;
 
-    /**
-     * @var EnvResolvingStrategyInterface
-     */
-    private $envResolvingStrategy;
+    private EnvResolvingStrategyInterface $envResolvingStrategy;
 
     public function __construct(
         HostDetectorInterface $hostDetector,

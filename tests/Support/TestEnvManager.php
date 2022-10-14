@@ -6,10 +6,7 @@ namespace Lamoda\MultiEnvTests\Support;
 
 trait TestEnvManager
 {
-    /**
-     * @var array $testEnv
-     */
-    private $testEnv = [];
+    private array $testEnv = [];
 
     public function addTestEnv(array $testEnvs): void
     {

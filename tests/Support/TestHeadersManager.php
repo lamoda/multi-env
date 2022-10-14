@@ -6,7 +6,7 @@ namespace Lamoda\MultiEnvTests\Support;
 
 trait TestHeadersManager
 {
-    private $testHeaders = [];
+    private array $testHeaders = [];
 
     public function addTestHeaders(array $headers): void
     {

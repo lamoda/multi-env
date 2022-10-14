@@ -6,10 +6,7 @@ namespace Lamoda\MultiEnv\Model;
 
 final class HostId
 {
-    /**
-     * @var string $id
-     */
-    private $id;
+    private string $id;
 
     public function __construct(string $id)
     {

@@ -27,7 +27,9 @@ use PHPUnit\Framework\TestCase;
 
 final class FileBasedEnvResolvingStrategyTest extends TestCase
 {
-    use TestHeadersManager, TestCliArgsManager, TestEnvFileManager;
+    use TestHeadersManager;
+    use TestCliArgsManager;
+    use TestEnvFileManager;
 
     protected function tearDown(): void
     {
@@ -37,14 +39,6 @@ final class FileBasedEnvResolvingStrategyTest extends TestCase
     }
 
     /**
-     * @param string $envToSearch
-     * @param string $expected
-     * @param array $testHeaders
-     * @param array $testCliArgs
-     * @param array $testEnvs
-     * @param HostDetectorInterface $hostDetector
-     * @param EnvFileReaderInterface $envFileReader
-     * @param EnvResolvingStrategyInterface $envResolvingStrategy
      * @dataProvider envResolvingDataProvider
      */
     public function testEnvResolvingByStrategy(
@@ -72,27 +66,27 @@ final class FileBasedEnvResolvingStrategyTest extends TestCase
                 'envToSearch' => 'TEST_ENV',
                 'expected' => 'correct_value',
                 'headers' => [
-                    'HTTP_X_HOST_ID' => 'test_host'
+                    'HTTP_X_HOST_ID' => 'test_host',
                 ],
                 'cliArgs' => [
                     'host_id' => [
-                        'value' => 'some_other_host'
-                    ]
+                        'value' => 'some_other_host',
+                    ],
                 ],
                 'testEnvs' => [
                     'relativePathToFile' => '',
                     'fileName' => '.env',
                     'envs' => [
                         'TEST_ENV' => 'correct_value',
-                        'WRONG_ENV' => 'wrong'
-                    ]
+                        'WRONG_ENV' => 'wrong',
+                    ],
                 ],
                 'hostDetector' => new ServerHeadersBasedHostDetector('HTTP_X_HOST_ID'),
                 'fileReader' => new DotEnvV2FileReaderAdapter(
                     new PathResolver($this->getBasePathToDataFolder()),
                     new FileNameResolver()
                 ),
-                'strategy' => new RawEnvResolvingStrategy()
+                'strategy' => new RawEnvResolvingStrategy(),
             ],
             'commonEnvFileNotInRootFoundByHeader' => [
                 'envToSearch' => 'TEST_ENV',
@@ -102,15 +96,15 @@ final class FileBasedEnvResolvingStrategyTest extends TestCase
                 ],
                 'cliArgs' => [
                     'host_id' => [
-                        'value' => 'wrong_host'
-                    ]
+                        'value' => 'wrong_host',
+                    ],
                 ],
                 'testEnvs' => [
                     'relativePathToFile' => 'correct_id',
                     'fileName' => '.env',
                     'envs' => [
                         'TEST_ENV' => 'some_value',
-                        'ANOTHER_ENV' => 'incorrect'
+                        'ANOTHER_ENV' => 'incorrect',
                     ],
                 ],
                 'hostDetector' => new ServerHeadersBasedHostDetector('HTTP_X_HOST_ID'),
@@ -118,18 +112,18 @@ final class FileBasedEnvResolvingStrategyTest extends TestCase
                     new PathResolver($this->getBasePathToDataFolder(), new SuffixAppendFormatter(DIRECTORY_SEPARATOR)),
                     new FileNameResolver()
                 ),
-                'strategy' => new RawEnvResolvingStrategy()
+                'strategy' => new RawEnvResolvingStrategy(),
             ],
             'commonEnvFileNotInRootFoundByCliArg' => [
                 'envToSearch' => 'RANDOM_ENV',
                 'expected' => 'correct',
                 'headers' => [
-                    'HTTP_X_HOST_ID' => 'incorrect_id'
+                    'HTTP_X_HOST_ID' => 'incorrect_id',
                 ],
                 'cliArgs' => [
                     'host_id' => [
-                        'value' => 'correct_host_id'
-                    ]
+                        'value' => 'correct_host_id',
+                    ],
                 ],
                 'testEnvs' => [
                     'relativePathToFile' => 'correct_host_id',
@@ -137,7 +131,7 @@ final class FileBasedEnvResolvingStrategyTest extends TestCase
                     'envs' => [
                         'TEST_ENV' => 'incorrect',
                         'WRONG_ENV' => 'some_value',
-                        'RANDOM_ENV' => 'correct'
+                        'RANDOM_ENV' => 'correct',
                     ],
                 ],
                 'hostDetector' => new CliArgsBasedHostDetector('host_id', GetOptAdapterFactory::build()),
@@ -145,7 +139,7 @@ final class FileBasedEnvResolvingStrategyTest extends TestCase
                     new PathResolver($this->getBasePathToDataFolder(), new SuffixAppendFormatter(DIRECTORY_SEPARATOR)),
                     new FileNameResolver()
                 ),
-                'strategy' => new RawEnvResolvingStrategy()
+                'strategy' => new RawEnvResolvingStrategy(),
             ],
             'uncommonEnvFileInRootFoundByHeader' => [
                 'envToSearch' => 'TEST_ENV',
@@ -155,14 +149,14 @@ final class FileBasedEnvResolvingStrategyTest extends TestCase
                 ],
                 'cliArgs' => [
                     'host_id' => [
-                        'value' => 'incorrect_instance_id'
-                    ]
+                        'value' => 'incorrect_instance_id',
+                    ],
                 ],
                 'testEnvs' => [
                     'relativePathToFile' => '',
                     'fileName' => '.test_instance_id_env',
                     'envs' => [
-                        'TEST_ENV' => 'test_env_value'
+                        'TEST_ENV' => 'test_env_value',
                     ],
                 ],
                 'hostDetector' => new ServerHeadersBasedHostDetector('HTTP_X_HOST_ID'),
@@ -170,7 +164,7 @@ final class FileBasedEnvResolvingStrategyTest extends TestCase
                     new PathResolver($this->getBasePathToDataFolder()),
                     new FileNameResolver('.env', new PrefixAppendFormatter('_'))
                 ),
-                'strategy' => new RawEnvResolvingStrategy()
+                'strategy' => new RawEnvResolvingStrategy(),
             ],
             'uncommonEnvFileInRootFoundByCliArg' => [
                 'envToSearch' => 'SOME_ENV',
@@ -178,28 +172,28 @@ final class FileBasedEnvResolvingStrategyTest extends TestCase
                 'headers' => [],
                 'cliArgs' => [
                     'host_id' => [
-                        'value' => 'instance_id'
-                    ]
+                        'value' => 'instance_id',
+                    ],
                 ],
                 'testEnvs' => [
                     'relativePathToFile' => '',
                     'fileName' => 'instance_id.env',
                     'envs' => [
-                        'SOME_ENV' => 'test'
-                    ]
+                        'SOME_ENV' => 'test',
+                    ],
                 ],
                 'hostDetector' => new CliArgsBasedHostDetector('host_id', GetOptAdapterFactory::build()),
                 'fileReader' => new DotEnvV2FileReaderAdapter(
                     new PathResolver($this->getBasePathToDataFolder()),
                     new FileNameResolver('env', new PrefixAppendFormatter('.'))
                 ),
-                'strategy' => new RawEnvResolvingStrategy()
+                'strategy' => new RawEnvResolvingStrategy(),
             ],
             'commonEnvInRootWithEnvWithPrefixes' => [
                 'envToSearch' => 'TEST_ENV',
                 'expected' => 'correct_value',
                 'headers' => [
-                    'HTTP_X_HOST_ID' => 'test_instance'
+                    'HTTP_X_HOST_ID' => 'test_instance',
                 ],
                 'cliArgs' => [],
                 'testEnvs' => [
@@ -207,8 +201,8 @@ final class FileBasedEnvResolvingStrategyTest extends TestCase
                     'fileName' => '.env',
                     'envs' => [
                         'test_instance___TEST_ENV' => 'correct_value',
-                        'TEST_ENV' => 'wrong_value'
-                    ]
+                        'TEST_ENV' => 'wrong_value',
+                    ],
                 ],
                 'hostDetector' => new ServerHeadersBasedHostDetector('HTTP_X_HOST_ID'),
                 'fileReader' => new DotEnvV2FileReaderAdapter(
@@ -219,10 +213,10 @@ final class FileBasedEnvResolvingStrategyTest extends TestCase
                     new ServerHeadersBasedHostDetector('HTTP_X_HOST_ID'),
                     new FormatterPipeline([
                         new PrefixAppendFormatter('---'),
-                        new CharReplaceFormatter('-', '_')
+                        new CharReplaceFormatter('-', '_'),
                     ])
-                )
-            ]
+                ),
+            ],
         ];
     }
 }

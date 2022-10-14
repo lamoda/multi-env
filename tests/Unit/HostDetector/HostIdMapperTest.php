@@ -16,10 +16,7 @@ final class HostIdMapperTest extends TestCase
      */
     private $inner;
 
-    /**
-     * @var HostIdMapper
-     */
-    private $mapper;
+    private HostIdMapper $mapper;
 
     protected function setUp(): void
     {
