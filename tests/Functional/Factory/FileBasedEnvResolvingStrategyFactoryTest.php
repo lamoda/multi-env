@@ -12,7 +12,9 @@ use PHPUnit\Framework\TestCase;
 
 class FileBasedEnvResolvingStrategyFactoryTest extends TestCase
 {
-    use TestHeadersManager, TestCliArgsManager, TestEnvFileManager;
+    use TestHeadersManager;
+    use TestCliArgsManager;
+    use TestEnvFileManager;
 
     protected function tearDown(): void
     {
@@ -22,12 +24,6 @@ class FileBasedEnvResolvingStrategyFactoryTest extends TestCase
     }
 
     /**
-     * @param string $envToSearch
-     * @param string $expected
-     * @param array $testHeaders
-     * @param array $testCliArgs
-     * @param array $testEnvs
-     * @param array $builderConfig
      * @dataProvider createStrategyDataProvider
      */
     public function testCreateStrategy(
@@ -62,22 +58,22 @@ class FileBasedEnvResolvingStrategyFactoryTest extends TestCase
                 ],
                 'cliArgs' => [
                     'host_id' => [
-                        'value' => 'wrong_host'
-                    ]
+                        'value' => 'wrong_host',
+                    ],
                 ],
                 'testEnvs' => [
                     'relativePathToFile' => 'correct_id',
                     'fileName' => '.env',
                     'envs' => [
                         'TEST_ENV' => 'some_value',
-                        'ANOTHER_ENV' => 'incorrect'
+                        'ANOTHER_ENV' => 'incorrect',
                     ],
                 ],
                 'builderConfig' => [
                     'header' => 'HTTP_X_HOST_ID',
                     'cliArg' => 'host_id',
                     'envFile' => '.env',
-                    'filePath' => $this->getBasePathToDataFolder()
+                    'filePath' => $this->getBasePathToDataFolder(),
                 ],
             ],
             'commonEnvFileNotInRootFoundByCliArg' => [
@@ -86,8 +82,8 @@ class FileBasedEnvResolvingStrategyFactoryTest extends TestCase
                 'headers' => [],
                 'cliArgs' => [
                     'host_id' => [
-                        'value' => 'correct_host_id'
-                    ]
+                        'value' => 'correct_host_id',
+                    ],
                 ],
                 'testEnvs' => [
                     'relativePathToFile' => 'correct_host_id',
@@ -95,14 +91,14 @@ class FileBasedEnvResolvingStrategyFactoryTest extends TestCase
                     'envs' => [
                         'TEST_ENV' => 'incorrect',
                         'WRONG_ENV' => 'some_value',
-                        'RANDOM_ENV' => 'correct'
+                        'RANDOM_ENV' => 'correct',
                     ],
                 ],
                 'builderConfig' => [
                     'header' => 'HTTP_X_HOST_ID',
                     'cliArg' => 'host_id',
                     'envFile' => '.env',
-                    'filePath' => $this->getBasePathToDataFolder()
+                    'filePath' => $this->getBasePathToDataFolder(),
                 ],
             ],
         ];

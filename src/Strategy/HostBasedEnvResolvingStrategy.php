@@ -10,15 +10,9 @@ use Lamoda\MultiEnv\HostDetector\HostDetectorInterface;
 
 final class HostBasedEnvResolvingStrategy implements EnvResolvingStrategyInterface
 {
-    /**
-     * @var HostDetectorInterface
-     */
-    private $hostDetector;
+    private HostDetectorInterface $hostDetector;
 
-    /**
-     * @var FormatterInterface $envNameFormatter
-     */
-    private $envNameFormatter;
+    private FormatterInterface $envNameFormatter;
 
     public function __construct(HostDetectorInterface $hostDetector, FormatterInterface $envNameFormatter)
     {
@@ -27,15 +21,13 @@ final class HostBasedEnvResolvingStrategy implements EnvResolvingStrategyInterfa
     }
 
     /**
-     * @param string $envName
      * @throws FormatterException
-     * @return string
      */
     public function getEnv(string $envName): string
     {
         $hostId = $this->hostDetector->getCurrentHost();
         $envName = $this->envNameFormatter->formatName($envName, $hostId);
 
-        return (string)getenv($envName);
+        return (string) getenv($envName);
     }
 }

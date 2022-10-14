@@ -9,9 +9,9 @@ use Lamoda\MultiEnv\Model\HostId;
 final class FirstSuccessfulHostDetector implements HostDetectorInterface
 {
     /**
-     * @var array|HostDetectorInterface[] $detectors
+     * @var array|HostDetectorInterface[]
      */
-    private $detectors = [];
+    private array $detectors = [];
 
     public function __construct(array $detectors = [])
     {
@@ -22,7 +22,7 @@ final class FirstSuccessfulHostDetector implements HostDetectorInterface
     {
         foreach ($this->detectors as $detector) {
             $hostId = $detector->getCurrentHost();
-            if ((string)$hostId !== '') {
+            if ((string) $hostId !== '') {
                 return $hostId;
             }
         }

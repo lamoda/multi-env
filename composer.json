@@ -4,16 +4,16 @@
   "type": "library",
   "license": "MIT",
   "require": {
-    "php": "^7.1",
-    "ulrichsg/getopt-php": "^3.2"
+    "php": "^7.4 || ^8.0",
+    "ulrichsg/getopt-php": "^4.0"
   },
   "require-dev": {
-    "friendsofphp/php-cs-fixer": "^2.14",
-    "phpunit/phpunit": "^7.5",
-    "vlucas/phpdotenv": "^2.4"
+    "friendsofphp/php-cs-fixer": "~v3.12.0",
+    "phpunit/phpunit": "^9.5",
+    "vlucas/phpdotenv": "v3.6.10"
   },
   "suggest": {
-    "vlucas/phpdotenv": "Required for DotEnvV2FileReaderAdapter."
+    "vlucas/phpdotenv": "Required for DotEnvFileReaderAdapter"
   },
   "autoload": {
     "psr-4": {

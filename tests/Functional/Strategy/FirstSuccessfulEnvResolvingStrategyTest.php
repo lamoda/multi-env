@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Lamoda\MultiEnvTests\Functional\Strategy;
 
 use Lamoda\MultiEnv\Formatter\CharReplaceFormatter;
-use Lamoda\MultiEnv\Formatter\FormatterInterface;
 use Lamoda\MultiEnv\Formatter\FormatterPipeline;
 use Lamoda\MultiEnv\Formatter\PrefixAppendFormatter;
 use Lamoda\MultiEnv\HostDetector\CliArgsBasedHostDetector;
@@ -23,9 +22,11 @@ use PHPUnit\Framework\TestCase;
 
 class FirstSuccessfulEnvResolvingStrategyTest extends TestCase
 {
-    use TestHeadersManager, TestCliArgsManager, TestEnvManager;
+    use TestHeadersManager;
+    use TestCliArgsManager;
+    use TestEnvManager;
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
         $this->removeTestHeaders();
@@ -34,12 +35,6 @@ class FirstSuccessfulEnvResolvingStrategyTest extends TestCase
     }
 
     /**
-     * @param string $envToSearch
-     * @param array $strategies
-     * @param array $testHeaders
-     * @param array $testCliArgs
-     * @param array $testEnvs
-     * @param string $expected
      * @dataProvider getEnvDataProvider
      */
     public function testGetEnv(
@@ -59,13 +54,12 @@ class FirstSuccessfulEnvResolvingStrategyTest extends TestCase
 
     /**
      * @throws HostDetectorException
-     * @return array
      */
     public function getEnvDataProvider(): array
     {
         $formatter = new FormatterPipeline([
             new PrefixAppendFormatter('-'),
-            new CharReplaceFormatter('-', '_')
+            new CharReplaceFormatter('-', '_'),
         ]);
 
         return [
@@ -73,19 +67,19 @@ class FirstSuccessfulEnvResolvingStrategyTest extends TestCase
                 'env' => 'DB_HOST',
                 'strategies' => [],
                 'headers' => [
-                    'HTTP_X_HOST_ID' => 'moscow'
+                    'HTTP_X_HOST_ID' => 'moscow',
                 ],
                 'cliArgs' => [
                     'host_id' => [
-                        'value' => 'piter'
-                    ]
+                        'value' => 'piter',
+                    ],
                 ],
                 'envs' => [
                     'DB_HOST' => 'wrong',
                     'MOSCOW_DB_HOST' => 'wrong-wrong',
-                    'PITER_DB_HOST' => 'definitely_wrong'
+                    'PITER_DB_HOST' => 'definitely_wrong',
                 ],
-                'expected' => ''
+                'expected' => '',
             ],
             'rawStrategyGoFirstAndWork' => [
                 'env' => 'DB_HOST',
@@ -97,22 +91,22 @@ class FirstSuccessfulEnvResolvingStrategyTest extends TestCase
                             new CliArgsBasedHostDetector('host_id', GetOptAdapterFactory::build()),
                         ]),
                         $formatter
-                    )
+                    ),
                 ],
                 'headers' => [
-                    'HTTP_X_HOST_ID' => 'moscow'
+                    'HTTP_X_HOST_ID' => 'moscow',
                 ],
                 'cliArgs' => [
                     'host_id' => [
-                        'value' => 'piter'
-                    ]
+                        'value' => 'piter',
+                    ],
                 ],
                 'envs' => [
                     'DB_HOST' => 'correct',
                     'MOSCOW_DB_HOST' => 'wrong',
-                    'PITER_DB_HOST' => 'incorrect'
+                    'PITER_DB_HOST' => 'incorrect',
                 ],
-                'expected' => 'correct'
+                'expected' => 'correct',
             ],
             'rawStrategyGoFirstAndDontWork' => [
                 'env' => 'DB_HOST',
@@ -121,24 +115,24 @@ class FirstSuccessfulEnvResolvingStrategyTest extends TestCase
                     new HostBasedEnvResolvingStrategy(
                         new FirstSuccessfulHostDetector([
                             new ServerHeadersBasedHostDetector('HTTP_X_HOST_ID'),
-                            new CliArgsBasedHostDetector('host_id', GetOptAdapterFactory::build())
+                            new CliArgsBasedHostDetector('host_id', GetOptAdapterFactory::build()),
                         ]),
                         $formatter
-                    )
+                    ),
                 ],
                 'headers' => [
-                    'HTTP_X_HOST_ID' => 'moscow'
+                    'HTTP_X_HOST_ID' => 'moscow',
                 ],
                 'cliArgs' => [
                     'host-id' => [
-                        'value' => 'piter'
-                    ]
+                        'value' => 'piter',
+                    ],
                 ],
                 'envs' => [
                     'piter_DB_HOST' => 'wrong',
-                    'moscow_DB_HOST' => 'correct'
+                    'moscow_DB_HOST' => 'correct',
                 ],
-                'expected' => 'correct'
+                'expected' => 'correct',
             ],
             'hostBasedGoFirstAndWork' => [
                 'env' => 'DB_HOST',
@@ -146,26 +140,26 @@ class FirstSuccessfulEnvResolvingStrategyTest extends TestCase
                     new HostBasedEnvResolvingStrategy(
                         new FirstSuccessfulHostDetector([
                             new ServerHeadersBasedHostDetector('HTTP_X_HOST_ID'),
-                            new CliArgsBasedHostDetector('host_id', GetOptAdapterFactory::build())
+                            new CliArgsBasedHostDetector('host_id', GetOptAdapterFactory::build()),
                         ]),
                         $formatter
                     ),
                     new RawEnvResolvingStrategy(),
                 ],
                 'headers' => [
-                    'HTTP_X_HOST_ID' => 'MOSCOW'
+                    'HTTP_X_HOST_ID' => 'MOSCOW',
                 ],
                 'cliArgs' => [
                     'host_id' => [
-                        'value' => 'PITER'
-                    ]
+                        'value' => 'PITER',
+                    ],
                 ],
                 'envs' => [
                     'DB_HOST' => 'incorrect',
                     'MOSCOW_DB_HOST' => '0',
-                    'PITER_DB_HOST' => 'incorrect'
+                    'PITER_DB_HOST' => 'incorrect',
                 ],
-                'expected' => '0'
+                'expected' => '0',
             ],
             'hostBasedGoFirstAndWorkCli' => [
                 'env' => 'DB_HOST',
@@ -173,26 +167,26 @@ class FirstSuccessfulEnvResolvingStrategyTest extends TestCase
                     new HostBasedEnvResolvingStrategy(
                         new FirstSuccessfulHostDetector([
                             new ServerHeadersBasedHostDetector('HTTP_X_HOST_ID'),
-                            new CliArgsBasedHostDetector('host_id', GetOptAdapterFactory::build())
+                            new CliArgsBasedHostDetector('host_id', GetOptAdapterFactory::build()),
                         ]),
                         $formatter
                     ),
                     new RawEnvResolvingStrategy(),
                 ],
                 'headers' => [
-                    'HTTP_X_HOST_ID_1' => 'MOSCOW'
+                    'HTTP_X_HOST_ID_1' => 'MOSCOW',
                 ],
                 'cliArgs' => [
                     'host_id' => [
-                        'value' => 'PITER'
-                    ]
+                        'value' => 'PITER',
+                    ],
                 ],
                 'envs' => [
                     'DB_HOST' => 'incorrect',
                     'MOSCOW_DB_HOST' => 'incorrect',
-                    'PITER_DB_HOST' => 'correct'
+                    'PITER_DB_HOST' => 'correct',
                 ],
-                'expected' => 'correct'
+                'expected' => 'correct',
             ],
             'hostBasedGoFirstAndDontWork' => [
                 'env' => 'DB_HOST',
@@ -200,22 +194,22 @@ class FirstSuccessfulEnvResolvingStrategyTest extends TestCase
                     new HostBasedEnvResolvingStrategy(
                         new FirstSuccessfulHostDetector([
                             new ServerHeadersBasedHostDetector('HTTP_X_HOST_ID'),
-                            new CliArgsBasedHostDetector('host_id', GetOptAdapterFactory::build())
+                            new CliArgsBasedHostDetector('host_id', GetOptAdapterFactory::build()),
                         ]),
                         $formatter
                     ),
                     new RawEnvResolvingStrategy(),
                 ],
                 'headers' => [
-                    'HTTP_X_HOST_ID' => 'moscow'
+                    'HTTP_X_HOST_ID' => 'moscow',
                 ],
                 'cliArgs' => [],
                 'envs' => [
                     'DB_HOST' => 'correct',
-                    'PITER_DB_HOST' => 'incorrect'
+                    'PITER_DB_HOST' => 'incorrect',
                 ],
-                'expected' => 'correct'
-            ]
+                'expected' => 'correct',
+            ],
         ];
     }
 }

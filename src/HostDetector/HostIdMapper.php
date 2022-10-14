@@ -8,17 +8,14 @@ use Lamoda\MultiEnv\Model\HostId;
 
 final class HostIdMapper implements HostDetectorInterface
 {
-    /**
-     * @var HostDetectorInterface
-     */
-    private $inner;
+    private HostDetectorInterface $inner;
+
     /**
      * @var string[]
      */
-    private $hostIdMap;
+    private array $hostIdMap;
 
     /**
-     * @param HostDetectorInterface $inner
      * @param string[] $hostIdMap
      */
     public function __construct(HostDetectorInterface $inner, array $hostIdMap = [])
@@ -30,7 +27,7 @@ final class HostIdMapper implements HostDetectorInterface
     public function getCurrentHost(): HostId
     {
         $innerHostId = $this->inner->getCurrentHost();
-        $value = $this->hostIdMap[(string)$innerHostId] ?? '';
+        $value = $this->hostIdMap[(string) $innerHostId] ?? '';
 
         return new HostId($value);
     }

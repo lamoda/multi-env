@@ -9,10 +9,7 @@ use Lamoda\MultiEnv\Model\HostId;
 
 final class PrefixAppendFormatter implements FormatterInterface
 {
-    /**
-     * @var string $delimiter
-     */
-    private $delimiter;
+    private string $delimiter;
 
     public function __construct(string $delimiter = '')
     {
@@ -20,10 +17,7 @@ final class PrefixAppendFormatter implements FormatterInterface
     }
 
     /**
-     * @param string $originalName
-     * @param HostId $hostId
      * @throws FormatterException
-     * @return string
      */
     public function formatName(string $originalName, HostId $hostId): string
     {

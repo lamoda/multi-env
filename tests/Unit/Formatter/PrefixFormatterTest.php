@@ -12,10 +12,6 @@ use PHPUnit\Framework\TestCase;
 class PrefixFormatterTest extends TestCase
 {
     /**
-     * @param string $delimiter
-     * @param string $originalName
-     * @param HostId $hostId
-     * @param string $expected
      * @dataProvider formatEnvNameDataProvider
      */
     public function testFormatEnvName(string $delimiter, string $originalName, HostId $hostId, string $expected): void
@@ -31,64 +27,60 @@ class PrefixFormatterTest extends TestCase
                 'delimiter' => '',
                 'originalName' => 'DB_HOST',
                 'hostId' => new HostId(''),
-                'expected' => 'DB_HOST'
+                'expected' => 'DB_HOST',
             ],
             'notEmptyOriginalNameHaveBracedSpaces' => [
                 'delimiter' => '',
                 'originalName' => '   DB_HOST   ',
                 'hostId' => new HostId(''),
-                'expected' => 'DB_HOST'
+                'expected' => 'DB_HOST',
             ],
             'notEmptyOriginalNameHaveDashSeparator' => [
                 'delimiter' => '',
                 'originalName' => 'DB-HOST',
                 'hostId' => new HostId(''),
-                'expected' => 'DB-HOST'
+                'expected' => 'DB-HOST',
             ],
             'notEmptyOriginalNameAndDelimiter' => [
                 'delimiter' => '__',
                 'originalName' => 'DB_HOST',
                 'hostId' => new HostId(''),
-                'expected' => '__DB_HOST'
+                'expected' => '__DB_HOST',
             ],
             'notEmptyOriginalNameAndDelimiterAllHaveDashInValue' => [
                 'delimiter' => '---',
                 'originalName' => '--DB-HOST--',
                 'hostId' => new HostId(''),
-                'expected' => '-----DB-HOST--'
+                'expected' => '-----DB-HOST--',
             ],
             'notEmptyAll' => [
                 'delimiter' => '__',
                 'originalName' => 'DB_HOST',
                 'hostId' => new HostId('TEST_HOST'),
-                'expected' => 'TEST_HOST__DB_HOST'
+                'expected' => 'TEST_HOST__DB_HOST',
             ],
             'notEmptyAllDelimiterIsDash' => [
                 'delimiter' => '-',
                 'originalName' => 'DB_HOST',
                 'hostId' => new HostId('TEST_HOST'),
-                'expected' => 'TEST_HOST-DB_HOST'
+                'expected' => 'TEST_HOST-DB_HOST',
             ],
             'notEmptyAllHaveDash' => [
                 'delimiter' => '-_-',
                 'originalName' => 'DB-HOST',
                 'hostId' => new HostId('TEST-HOST'),
-                'expected' => 'TEST-HOST-_-DB-HOST'
+                'expected' => 'TEST-HOST-_-DB-HOST',
             ],
             'notEmptyAllOriginalNameAndHostIdInLowerCase' => [
                 'delimiter' => '_',
                 'originalName' => 'db_host',
                 'hostId' => new HostId('test_host'),
-                'expected' => 'test_host_db_host'
-            ]
+                'expected' => 'test_host_db_host',
+            ],
         ];
     }
 
     /**
-     * @param string $delimiter
-     * @param string $originalName
-     * @param HostId $hostId
-     * @param \Exception $expected
      * @dataProvider exceptionRaisedWhileEnvNameFormatDataProvider
      */
     public function testExceptionRaisedWhileEnvNameFormat(
@@ -110,19 +102,19 @@ class PrefixFormatterTest extends TestCase
                 'delimiter' => '',
                 'originalName' => '',
                 'hostId' => new HostId(''),
-                'expected' => FormatterException::becauseEmptyNamePassed()
+                'expected' => FormatterException::becauseEmptyNamePassed(),
             ],
             'notEmptyDelimiter' => [
                 'delimiter' => '---',
                 'originalName' => '',
                 'hostId' => new HostId(''),
-                'expected' => FormatterException::becauseEmptyNamePassed()
+                'expected' => FormatterException::becauseEmptyNamePassed(),
             ],
             'notEmptyDelimiterAndHostId' => [
                 'delimiter' => '---',
                 'originalName' => '',
                 'hostId' => new HostId('test_host'),
-                'expected' => FormatterException::becauseEmptyNamePassed()
+                'expected' => FormatterException::becauseEmptyNamePassed(),
             ],
         ];
     }

@@ -6,7 +6,7 @@ namespace Lamoda\MultiEnvTests\Support;
 
 trait TestCliArgsManager
 {
-    private $testCliArgs = [];
+    private array $testCliArgs = [];
 
     public function addTestCliArgs(array $cliArgs): void
     {

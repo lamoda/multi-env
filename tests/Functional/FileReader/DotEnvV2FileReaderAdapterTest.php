@@ -26,14 +26,6 @@ class DotEnvV2FileReaderAdapterTest extends TestCase
     }
 
     /**
-     * @param string $relativePathToFile
-     * @param string $fileName
-     * @param PathResolver $pathResolver
-     * @param FileNameResolver $fileNameResolver
-     * @param HostId $hostId
-     * @param array $envsToWrite
-     * @param string $envToSearch
-     * @param string $expectedValue
      * @dataProvider readEnvFileDataProvider
      */
     public function testReadEnvFileHappyPath(
@@ -65,7 +57,7 @@ class DotEnvV2FileReaderAdapterTest extends TestCase
                 'hostId' => new HostId('some_host'),
                 'envsToWrite' => [
                     'TEST_ENV' => 'some_value',
-                    'ANOTHER_TEST_ENV' => 'another_value'
+                    'ANOTHER_TEST_ENV' => 'another_value',
                 ],
                 'envToSearch' => 'TEST_ENV',
                 'expected' => 'some_value',
@@ -76,16 +68,16 @@ class DotEnvV2FileReaderAdapterTest extends TestCase
                 'pathResolver' => new PathResolver($this->getBasePathToDataFolder()),
                 'fileNameResolver' => new FileNameResolver(FileNameResolver::DEFAULT_FILE_NAME, new FormatterPipeline([
                     new PrefixAppendFormatter('.'),
-                    new CharReplaceFormatter('-', '_')
+                    new CharReplaceFormatter('-', '_'),
                 ])),
                 'hostId' => new HostId('some_value'),
                 'envsToWrite' => [
                     'TEST_ENV' => 'different_value',
                     'TEST_ENV1' => 'wrong',
-                    'TEST_ENV2' => 'another_wrong'
+                    'TEST_ENV2' => 'another_wrong',
                 ],
                 'envToSearch' => 'TEST_ENV',
-                'expected' => 'different_value'
+                'expected' => 'different_value',
             ],
             'fileInRootWithSuffix' => [
                 'relativePathToFile' => '',
@@ -93,15 +85,15 @@ class DotEnvV2FileReaderAdapterTest extends TestCase
                 'pathResolver' => new PathResolver($this->getBasePathToDataFolder()),
                 'fileNameResolver' => new FileNameResolver(FileNameResolver::DEFAULT_FILE_NAME, new FormatterPipeline([
                     new SuffixAppendFormatter('-'),
-                    new CharReplaceFormatter('-', '_')
+                    new CharReplaceFormatter('-', '_'),
                 ])),
                 'hostId' => new HostId('some-host'),
                 'envsToWrite' => [
                     'ENV_TO_SEARCH' => 'some_value',
-                    'WRONG_ENV' => 'wrong'
+                    'WRONG_ENV' => 'wrong',
                 ],
                 'envToSearch' => 'ENV_TO_SEARCH',
-                'expected' => 'some_value'
+                'expected' => 'some_value',
             ],
             'defaultFileNotInRoot' => [
                 'relativePathToFile' => 'test_host',
@@ -111,10 +103,10 @@ class DotEnvV2FileReaderAdapterTest extends TestCase
                 'hostId' => new HostId('test_host'),
                 'envToWrite' => [
                     'SOME_ENV' => 'correct_value',
-                    'INCORRECT_ENV' => 'incorrect_value'
+                    'INCORRECT_ENV' => 'incorrect_value',
                 ],
                 'envToSearch' => 'SOME_ENV',
-                'expected' => 'correct_value'
+                'expected' => 'correct_value',
             ],
             'notDefaultFileNotInRoot' => [
                 'relativePathToFile' => 'test-id',
@@ -122,24 +114,20 @@ class DotEnvV2FileReaderAdapterTest extends TestCase
                 'pathResolve' => new PathResolver($this->getBasePathToDataFolder(), new SuffixAppendFormatter(DIRECTORY_SEPARATOR)),
                 'fileNameResolver' => new FileNameResolver('env', new FormatterPipeline([
                     new PrefixAppendFormatter('-'),
-                    new CharReplaceFormatter('-', '_')
+                    new CharReplaceFormatter('-', '_'),
                 ])),
                 'hostId' => new HostId('test-id'),
                 'entToWrite' => [
                     'SOME_ENV' => 'totally_correct_value',
-                    'TEST_ENV' => 'test_value'
+                    'TEST_ENV' => 'test_value',
                 ],
                 'envToSearch' => 'SOME_ENV',
-                'expected' => 'totally_correct_value'
-            ]
+                'expected' => 'totally_correct_value',
+            ],
         ];
     }
 
     /**
-     * @param string $envToSearch
-     * @param string $expected
-     * @param array $startEnv
-     * @param array $finalEnv
      * @dataProvider readFileOnlyOnceDataProvider
      */
     public function testThatAdapterReadFileOnlyOnce(
@@ -171,24 +159,17 @@ class DotEnvV2FileReaderAdapterTest extends TestCase
                 'expected' => 'correct_value',
                 'startEnvs' => [
                     'TEST_ENV' => 'correct_value',
-                    'ANOTHER_ENV' => 'test_value'
+                    'ANOTHER_ENV' => 'test_value',
                 ],
                 'endEnvs' => [
                     'TEST_ENV' => 'incorrect_value',
-                    'ANOTHER_ENV' => 'some_value'
-                ]
-            ]
+                    'ANOTHER_ENV' => 'some_value',
+                ],
+            ],
         ];
     }
 
     /**
-     * @param string $relativePathToFile
-     * @param string $fileName
-     * @param PathResolver $pathResolver
-     * @param FileNameResolver $fileNameResolver
-     * @param HostId $hostId
-     * @param array $envToWrite
-     * @param \Throwable $expected
      * @dataProvider exceptionRaisedDataProvider
      */
     public function testExceptionRaisedWhenFileCantBeLoad(
@@ -218,14 +199,14 @@ class DotEnvV2FileReaderAdapterTest extends TestCase
                 'pathResolver' => new PathResolver($this->getBasePathToDataFolder(), new SuffixAppendFormatter(DIRECTORY_SEPARATOR)),
                 'fileNameResolver' => new FileNameResolver(FileNameResolver::DEFAULT_FILE_NAME, new FormatterPipeline([
                     new SuffixAppendFormatter('-'),
-                    new CharReplaceFormatter('-', '_')
+                    new CharReplaceFormatter('-', '_'),
                 ])),
                 'hostId' => new HostId('test'),
                 'envToWrite' => [
-                    'TEST_ENV' => 'some_value'
+                    'TEST_ENV' => 'some_value',
                 ],
-                'expected' => EnvFileReaderException::becauseEnvFileCanNotBeProcessed(null)
-            ]
+                'expected' => EnvFileReaderException::becauseEnvFileCanNotBeProcessed(null),
+            ],
         ];
     }
 }

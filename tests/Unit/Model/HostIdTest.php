@@ -10,14 +10,12 @@ use PHPUnit\Framework\TestCase;
 class HostIdTest extends TestCase
 {
     /**
-     * @param string $hostId
-     * @param string $expected
      * @dataProvider creationDataProvider
      */
     public function testCreation(string $hostId, string $expected): void
     {
         $model = new HostId($hostId);
-        $this->assertEquals($expected, (string)$model);
+        $this->assertEquals($expected, (string) $model);
     }
 
     public function creationDataProvider(): array
@@ -25,7 +23,7 @@ class HostIdTest extends TestCase
         return [
             'empty' => [
                 'hostId' => '',
-                'expected' => ''
+                'expected' => '',
             ],
             'filledWithSpaces' => [
                 'hostId' => '      ',
@@ -33,16 +31,16 @@ class HostIdTest extends TestCase
             ],
             'filledWithSystemSymbols' => [
                 'hostId' => "\t\n\r\0\x0B",
-                'expected' => ''
+                'expected' => '',
             ],
             'filled' => [
                 'hostId' => 'testValue',
-                'expected' => 'testValue'
+                'expected' => 'testValue',
             ],
             'filledAnother' => [
                 'hostId' => '   testValue1',
-                'expected' => 'testValue1'
-            ]
+                'expected' => 'testValue1',
+            ],
         ];
     }
 }

@@ -17,10 +17,7 @@ class CliArgsBasedHostDetectorTest extends TestCase
 {
     use TestCliArgsManager;
 
-    /**
-     * @var GetOpt $getOptAdapter
-     */
-    private $getOptAdapter;
+    private GetOpt $getOptAdapter;
 
     protected function setUp(): void
     {
@@ -35,7 +32,6 @@ class CliArgsBasedHostDetectorTest extends TestCase
     }
 
     /**
-     * @param string $needle
      * @dataProvider successfulCreationDataProvider
      */
     public function testSuccessfulCreation(string $needle): void
@@ -55,15 +51,13 @@ class CliArgsBasedHostDetectorTest extends TestCase
             ],
             'needleWithSystemSymbols' => [
                 'needle' => "    \t\n\n\t\0\x0B   testNeedleTest \t\t\t\t\t\r\t\n\n\0\x0B",
-            ]
+            ],
         ];
     }
 
     /**
-     * @param string $needle
-     * @param GetOpt $getOptAdapter
-     * @param \Exception $expectedException
      * @throws HostDetectorException
+     *
      * @dataProvider exceptionRaisedWhenConstructCalledWithWrongNeedle
      */
     public function testExceptionRaisedWhenConstructCalledWithWrongNeedle(
@@ -89,31 +83,29 @@ class CliArgsBasedHostDetectorTest extends TestCase
             'emptyNeedle' => [
                 'needle' => '',
                 'getOptAdapter' => new GetOpt(null, [GetOpt::SETTING_STRICT_OPTIONS => false]),
-                'expectedException' => $emptyNeedleException
+                'expectedException' => $emptyNeedleException,
             ],
             'emptyNeedleWithSpaces' => [
                 'needle' => '         ',
                 'getOptAdapter' => new GetOpt(null, [GetOpt::SETTING_STRICT_OPTIONS => false]),
-                'expectedException' => $emptyNeedleException
+                'expectedException' => $emptyNeedleException,
             ],
             'emptyNeedleWithSystemChars' => [
                 'needle' => "\t\n\r\n\n\n\r\t\n     \n\t\r\0\x0B     ",
                 'getOptAdapter' => new GetOpt(null, [GetOpt::SETTING_STRICT_OPTIONS => false]),
-                'expectedException' => $emptyNeedleException
+                'expectedException' => $emptyNeedleException,
             ],
             'correctNeedleIncorrectGetOpt' => [
                 'needle' => 'test',
                 'getOptAdapter' => new GetOpt(),
-                'expectedException' => $incorrectGetOptAdapterParamsException
-            ]
+                'expectedException' => $incorrectGetOptAdapterParamsException,
+            ],
         ];
     }
 
     /**
-     * @param string $needle
-     * @param array $cliArgs
-     * @param HostId $expected
      * @throws HostDetectorException
+     *
      * @dataProvider getCurrentHostDataProvider
      */
     public function testGetCurrentHost(string $needle, array $cliArgs, HostId $expected): void
@@ -121,7 +113,7 @@ class CliArgsBasedHostDetectorTest extends TestCase
         $detector = new CliArgsBasedHostDetector($needle, $this->getOptAdapter);
         $this->addTestCliArgs($cliArgs);
         $hostId = $detector->getCurrentHost();
-        $this->assertEquals((string)$expected, (string)$hostId);
+        $this->assertEquals((string) $expected, (string) $hostId);
     }
 
     public function getCurrentHostDataProvider(): array
@@ -130,92 +122,92 @@ class CliArgsBasedHostDetectorTest extends TestCase
             'emptyArgs' => [
                 'needle' => 'host_id',
                 'cliArgs' => [],
-                'expected' => new HostId('')
+                'expected' => new HostId(''),
             ],
             'notEmptySingleCliArg' => [
                 'needle' => 'host_id',
                 'cliArgs' => [
                     'host_id' => [
                         'useKeyValueSeparator' => true,
-                        'value' => 'test-host-id'
-                    ]
+                        'value' => 'test-host-id',
+                    ],
                 ],
-                'expected' => new HostId('test-host-id')
+                'expected' => new HostId('test-host-id'),
             ],
             'noEmptyMultipleCliArgsWithSeparators' => [
                 'needle' => 'a',
                 'cliArgs' => [
                     'file' => [
                         'useKeyValueSeparator' => true,
-                        'value' => '/temp/test_file.php'
+                        'value' => '/temp/test_file.php',
                     ],
                     'a' => [
                         'useKeyValueSeparator' => true,
-                        'value' => 'test-result'
+                        'value' => 'test-result',
                     ],
                     'bbb' => [
                         'useKeyValueSeparator' => true,
-                        'value' => 'anotherTestValue'
-                    ]
+                        'value' => 'anotherTestValue',
+                    ],
                 ],
-                'expected' => new HostId('test-result')
+                'expected' => new HostId('test-result'),
             ],
             'notEmptyMultipleCliArgsWithoutSeparators' => [
                 'needle' => 'bbc',
                 'cliArgs' => [
                     'a' => [
                         'useKeyValueSeparator' => false,
-                        'value' => 'test'
+                        'value' => 'test',
                     ],
                     'b' => [
                         'useKeyValueSeparator' => false,
-                        'value' => 'test1'
+                        'value' => 'test1',
                     ],
                     'bb' => [
                         'useKeyValueSeparator' => false,
-                        'value' => 'test2'
+                        'value' => 'test2',
                     ],
                     'bc' => [
                         'useKeyValueSeparator' => false,
-                        'value' => 'test3'
+                        'value' => 'test3',
                     ],
                     'bbc' => [
                         'useKeyValueSeparator' => false,
-                        'value' => 'test4'
+                        'value' => 'test4',
                     ],
                     'abbc' => [
                         'useKeyValueSeparator' => false,
-                        'value' => 'test5'
+                        'value' => 'test5',
                     ],
                 ],
-                'expected' => new HostId('test4')
+                'expected' => new HostId('test4'),
             ],
             'notEmptyMultipleCliArgsMixed' => [
                 'needle' => 'abc',
                 'cliArgs' => [
                     'a' => [
                         'useKeyValueSeparator' => true,
-                        'value' => 'test-test'
+                        'value' => 'test-test',
                     ],
                     'b' => [
                         'useKeyValueSeparator' => false,
-                        'value' => 'test-test1'
+                        'value' => 'test-test1',
                     ],
                     'ab' => [
                         'useKeyValueSeparator' => false,
-                        'value' => 'test-test2'
+                        'value' => 'test-test2',
                     ],
                     'bb' => [
                         'useKeyValueSeparator' => true,
-                        'value' => 'test-test3'
+                        'value' => 'test-test3',
                     ],
                     'abc' => [
                         'useKeyValueSeparator' => true,
-                        'value' => 'test-test-test'
+                        'value' => 'test-test-test',
                     ],
                 ],
-                'expected' => new HostId('test-test-test')
-            ]
+                'expected' => new HostId('test-test-test'),
+            ],
         ];
     }
 

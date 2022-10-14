@@ -31,11 +31,11 @@ class HostBasedEnvResolvingStrategyFactory
         return new HostBasedEnvResolvingStrategy(
             new FirstSuccessfulHostDetector([
                 new ServerHeadersBasedHostDetector($serverHeaderToSearch),
-                new CliArgsBasedHostDetector($cliArgToSearch, GetOptAdapterFactory::build())
+                new CliArgsBasedHostDetector($cliArgToSearch, GetOptAdapterFactory::build()),
             ]),
             new FormatterPipeline([
                 new PrefixAppendFormatter($delimiter),
-                new CharReplaceFormatter('-', '_')
+                new CharReplaceFormatter('-', '_'),
             ])
         );
     }

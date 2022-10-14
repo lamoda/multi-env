@@ -11,7 +11,7 @@ final class FormatterPipeline implements FormatterInterface
     /**
      * @var FormatterInterface[]
      */
-    private $formatters;
+    private array $formatters;
 
     public function __construct(array $formatters)
     {

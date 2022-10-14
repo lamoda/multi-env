@@ -9,15 +9,9 @@ use Lamoda\MultiEnv\Model\HostId;
 
 final class PathResolver implements PathResolverInterface
 {
-    /**
-     * @var string
-     */
-    private $originalPath;
+    private string $originalPath;
 
-    /**
-     * @var FormatterInterface|null
-     */
-    private $formatter;
+    private ?FormatterInterface $formatter;
 
     public function __construct(string $originalPath, FormatterInterface $formatter = null)
     {

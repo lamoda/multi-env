@@ -10,24 +10,13 @@ use Lamoda\MultiEnv\Model\HostId;
 
 final class CliArgsBasedHostDetector implements HostDetectorInterface
 {
-    /**
-     * @var string $needle
-     */
-    private $needle;
+    private string $needle;
+
+    private GetOpt $getOptAdapter;
+
+    private bool $isCliArgumentsParsed = false;
 
     /**
-     * @var GetOpt $getOptAdapter
-     */
-    private $getOptAdapter;
-
-    /**
-     * @var bool $isCliArgumentsParsed
-     */
-    private $isCliArgumentsParsed = false;
-
-    /**
-     * @param string $needle
-     * @param GetOpt $getOptAdapter
      * @throws HostDetectorException
      */
     public function __construct(string $needle, GetOpt $getOptAdapter)
@@ -46,15 +35,13 @@ final class CliArgsBasedHostDetector implements HostDetectorInterface
             $this->isCliArgumentsParsed = true;
         }
 
-        $hostId = (string)$this->getOptAdapter->getOption($this->needle);
+        $hostId = (string) $this->getOptAdapter->getOption($this->needle);
         $hostId = trim($hostId, '=');
 
         return new HostId($hostId);
     }
 
     /**
-     * @param string $needle
-     * @param GetOpt $getOptAdapter
      * @throws HostDetectorException
      */
     private function validateInitialParams(string $needle, GetOpt $getOptAdapter): void
@@ -63,7 +50,7 @@ final class CliArgsBasedHostDetector implements HostDetectorInterface
             throw HostDetectorException::becauseEmptyNeedlePassed(self::class);
         }
 
-        if ((bool)$getOptAdapter->get(GetOpt::SETTING_STRICT_OPTIONS) !== false) {
+        if ((bool) $getOptAdapter->get(GetOpt::SETTING_STRICT_OPTIONS) !== false) {
             throw HostDetectorException::becauseGetOptAdapterConfiguredIncorrect(
                 GetOpt::class,
                 GetOpt::SETTING_STRICT_OPTIONS,

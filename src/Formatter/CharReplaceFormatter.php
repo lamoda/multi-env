@@ -8,15 +8,9 @@ use Lamoda\MultiEnv\Model\HostId;
 
 final class CharReplaceFormatter implements FormatterInterface
 {
-    /**
-     * @var string
-     */
-    private $search;
+    private string $search;
 
-    /**
-     * @var string
-     */
-    private $replace;
+    private string $replace;
 
     public function __construct(string $search, string $replace)
     {

@@ -10,15 +10,10 @@ use Lamoda\MultiEnv\Model\HostId;
 final class FileNameResolver implements FileNameResolverInterface
 {
     public const DEFAULT_FILE_NAME = '.env';
-    /**
-     * @var string
-     */
-    private $originalFileName;
 
-    /**
-     *@var FormatterInterface|null
-     */
-    private $formatter;
+    private string $originalFileName;
+
+    private ?FormatterInterface $formatter;
 
     public function __construct(string $originalFileName = self::DEFAULT_FILE_NAME, FormatterInterface $formatter = null)
     {
